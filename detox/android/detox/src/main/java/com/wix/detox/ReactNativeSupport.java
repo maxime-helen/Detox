@@ -185,17 +185,21 @@ public class ReactNativeSupport {
         setupReactNativeQueueInterrogators(reactContext);
 
         rnBridgeIdlingResource = new ReactBridgeIdlingResource(reactContext);
-        rnTimerIdlingResource = new ReactNativeTimersIdlingResource(reactContext);
         rnUIModuleIdlingResource = new ReactNativeUIModuleIdlingResource(reactContext);
-        animIdlingResource = new AnimatedModuleIdlingResource(reactContext);
 
-        IdlingRegistry.getInstance().register(rnTimerIdlingResource);
         IdlingRegistry.getInstance().register(rnBridgeIdlingResource);
         IdlingRegistry.getInstance().register(rnUIModuleIdlingResource);
-        IdlingRegistry.getInstance().register(animIdlingResource);
 
         if (networkSyncEnabled) {
             setupNetworkIdlingResource();
+        }
+
+        if (animationSyncEnabled) {
+            setupAnimationIdlingResource();
+        }
+
+        if (rnTimersSyncEnabled) {
+            setupRNTimersIdlingResource();
         }
     }
 
@@ -204,7 +208,7 @@ public class ReactNativeSupport {
         Looper JSMessageQueue = getLooperFromQueue(reactContext, FIELD_JS_MSG_QUEUE);
         Looper JMativeModulesMessageQueue = getLooperFromQueue(reactContext, FIELD_NATIVE_MODULES_MSG_QUEUE);
 
-//        IdlingRegistry.getInstance().registerLooperAsIdlingResource(UIBackgroundMessageQueue);
+        //        IdlingRegistry.getInstance().registerLooperAsIdlingResource(UIBackgroundMessageQueue);
         IdlingRegistry.getInstance().registerLooperAsIdlingResource(JSMessageQueue);
         IdlingRegistry.getInstance().registerLooperAsIdlingResource(JMativeModulesMessageQueue);
 
@@ -258,6 +262,32 @@ public class ReactNativeSupport {
         networkSyncEnabled = enable;
     }
 
+    private static boolean animationSyncEnabled = true;
+    public static void enableAnimationSynchronization(boolean enable) {
+        if (!isReactNativeApp()) return;
+        if (animationSyncEnabled == enable) return;
+
+        if (enable) {
+            setupAnimationIdlingResource();
+        } else {
+            removeAnimationIdlingResource();
+        }
+        animationSyncEnabled = enable;
+    }
+
+    private static boolean rnTimersSyncEnabled = true;
+    public static void enableRNTimersSynchronization(boolean enable) {
+        if (!isReactNativeApp()) return;
+        if (rnTimersSyncEnabled == enable) return;
+
+        if (enable) {
+            setupRNTimersIdlingResource();
+        } else {
+            removeRNTimersIdlingResource();
+        }
+        rnTimersSyncEnabled = enable;
+    }
+
     private static ReactNativeNetworkIdlingResource networkIR = null;
     private final static String CLASS_NETWORK_MODULE = "com.facebook.react.modules.network.NetworkingModule";
     private final static String METHOD_GET_NATIVE_MODULE = "getNativeModule";
@@ -303,6 +333,30 @@ public class ReactNativeSupport {
         }
     }
 
+    private static void setupAnimationIdlingResource() {
+        animIdlingResource = new AnimatedModuleIdlingResource(currentReactContext);
+        IdlingRegistry.getInstance().register(animIdlingResource);
+    }
+
+    private static void removeAnimationIdlingResource() {
+        if (animIdlingResource != null) {
+            IdlingRegistry.getInstance().unregister(animIdlingResource);
+            animIdlingResource = null;
+        }
+    }
+
+    private static void setupRNTimersIdlingResource() {
+        rnTimerIdlingResource = new ReactNativeTimersIdlingResource(currentReactContext);
+        IdlingRegistry.getInstance().register(rnTimerIdlingResource);
+    }
+
+    private static void removeRNTimersIdlingResource() {
+        if (rnTimerIdlingResource != null) {
+            IdlingRegistry.getInstance().unregister(rnTimerIdlingResource);
+            rnTimerIdlingResource = null;
+        }
+    }
+
     public static void pauseRNTimersIdlingResource() {
         if (rnTimerIdlingResource != null) {
             rnTimerIdlingResource.pause();
@@ -310,6 +364,8 @@ public class ReactNativeSupport {
     }
 
     public static void resumeRNTimersIdlingResource() {
-        rnTimerIdlingResource.resume();
+        if (rnTimerIdlingResource != null) {
+            rnTimerIdlingResource.resume();
+        }
     }
 }

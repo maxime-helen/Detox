@@ -209,6 +209,22 @@ class Device {
     await this.deviceDriver.disableSynchronization();
   }
 
+  async enableAnimationSynchronization() {
+    await this.deviceDriver.enableAnimationSynchronization();
+  }
+
+  async disableAnimationSynchronization() {
+    await this.deviceDriver.disableAnimationSynchronization();
+  }
+
+  async enableRNTimersSynchronization() {
+    await this.deviceDriver.enableRNTimersSynchronization();
+  }
+
+  async disableRNTimersSynchronization() {
+    await this.deviceDriver.disableRNTimersSynchronization();
+  }
+
   async resetContentAndSettings() {
     await this.deviceDriver.resetContentAndSettings(this._deviceId);
   }

@@ -184,6 +184,26 @@ class AndroidDriver extends DeviceDriverBase {
     await this.invocationManager.execute(call);
   }
 
+  async enableAnimationSynchronization() {
+    const call = EspressoDetoxApi.setAnimationSynchronization(true);
+    await this.invocationManager.execute(call);
+  }
+
+  async disableAnimationSynchronization() {
+    const call = EspressoDetoxApi.setAnimationSynchronization(false);
+    await this.invocationManager.execute(call);
+  }
+
+  async enableRNTimersSynchronization() {
+    const call = EspressoDetoxApi.setRNTimersSynchronization(true);
+    await this.invocationManager.execute(call);
+  }
+
+  async disableRNTimersSynchronization() {
+    const call = EspressoDetoxApi.setRNTimersSynchronization(false);
+    await this.invocationManager.execute(call);
+  }
+
   async setOrientation(deviceId, orientation) {
     const orientationMapping = {
       landscape: 1, // top at left side landscape

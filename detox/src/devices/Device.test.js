@@ -572,6 +572,34 @@ describe('Device', () => {
     expect(driverMock.driver.disableSynchronization).toHaveBeenCalledTimes(1);
   });
 
+  it(`enableAnimationSynchronization() should pass to device driver`, async () => {
+    const device = validDevice();
+    await device.enableAnimationSynchronization();
+
+    expect(driverMock.driver.enableAnimationSynchronization).toHaveBeenCalledTimes(1);
+  });
+
+  it(`disableAnimationSynchronization() should pass to device driver`, async () => {
+    const device = validDevice();
+    await device.disableAnimationSynchronization();
+
+    expect(driverMock.driver.disableAnimationSynchronization).toHaveBeenCalledTimes(1);
+  });
+
+  it(`enableRNTimersSynchronization() should pass to device driver`, async () => {
+    const device = validDevice();
+    await device.enableRNTimersSynchronization();
+
+    expect(driverMock.driver.enableRNTimersSynchronization).toHaveBeenCalledTimes(1);
+  });
+
+  it(`disableRNTimersSynchronization() should pass to device driver`, async () => {
+    const device = validDevice();
+    await device.disableRNTimersSynchronization();
+
+    expect(driverMock.driver.disableRNTimersSynchronization).toHaveBeenCalledTimes(1);
+  });
+
   it(`resetContentAndSettings() should pass to device driver`, async () => {
     const device = validDevice();
     await device.resetContentAndSettings();

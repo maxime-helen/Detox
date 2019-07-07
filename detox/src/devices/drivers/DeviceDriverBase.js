@@ -131,6 +131,22 @@ class DeviceDriverBase {
     return await Promise.resolve('');
   }
 
+  async enableAnimationSynchronization() {
+    return await Promise.resolve('');
+  }
+
+  async disableAnimationSynchronization() {
+    return await Promise.resolve('');
+  }
+
+  async enableRNTimersSynchronization() {
+    return await Promise.resolve('');
+  }
+
+  async disableRNTimersSynchronization() {
+    return await Promise.resolve('');
+  }
+
   async resetContentAndSettings() {
     return await Promise.resolve('');
   }
